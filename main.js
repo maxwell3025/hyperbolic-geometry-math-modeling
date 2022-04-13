@@ -63,7 +63,9 @@ class PointH{
     }
 
     dist(other){
-        
+        return Math.acosh(
+            Math.cosh(this.r)*Math.cosh(other.r) - Math.cos(this.t-other.t)*Math.sinh(this.r)*Math.sinh(other.r)
+        )
     }
 
     get vec3(){
@@ -82,7 +84,9 @@ class PointH{
         return Point.polar(Math.sinh(this.r)/(Math.cosh(this.r)+1),this.theta)
     }
 
-    
+    get halfPlane(){
+        
+    }
 
 }
 class LineH{
@@ -104,5 +108,5 @@ class LineH{
     }
 }
 
-console.log(LineH.fromPoints(new PointH(1, 1), new PointH(1, -1)))
+console.log(new PointH(1, Math.PI).dist(new PointH(1, 0)))
 
