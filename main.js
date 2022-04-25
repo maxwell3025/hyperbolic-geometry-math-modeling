@@ -3,6 +3,7 @@ class Point3{
         this.x = x
         this.y = y
         this.z = z
+        this.parity = true
     }
     get phi(){
         return Math.atan2(this.z, Math.hypot(this.x, this.y))
@@ -87,7 +88,7 @@ class PointH{
     get halfPlane(){
         
     }
-
+    
 }
 class LineH{
     //uses 2 imaginary points at infinity
@@ -108,5 +109,5 @@ class LineH{
     }
 }
 
-console.log(new PointH(1, Math.PI).dist(new PointH(1, 0)))
+console.log(new PointH(1, Math.PI/2).dist(new PointH(1, 0)))
 
