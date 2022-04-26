@@ -109,5 +109,19 @@ class LineH{
     }
 }
 
+class Vector{
+    constructor(pos, dir){
+        this.pos = pos
+        this.dir = dir
+    }
+    
+    forward(factor){
+        
+    }
+
+    rotate(angle){
+        
+    }
+}
 console.log(new PointH(1, Math.PI/2).dist(new PointH(1, 0)))
 
