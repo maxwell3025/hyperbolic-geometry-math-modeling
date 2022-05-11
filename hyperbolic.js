@@ -61,6 +61,7 @@ class PointH{
     constructor(r, theta){
         this.r = r
         this.t = theta
+        this.normalize()
     }
 
     dist(other){
@@ -89,6 +90,19 @@ class PointH{
         
     }
     
+    normalize(){
+        if(this.r<0){
+            this.r *= -1
+            this.t += Math.PI
+        }
+        this.t = this.t % (Math.PI * 2);
+        if(this.t < -Math.PI){
+            this.t += Math.PI * 2;
+        }
+        if(this.t > Math.PI){
+            this.t -= Math.PI * 2;
+        }
+    }
 }
 class LineH{
     //uses 2 imaginary points at infinity
@@ -109,6 +123,21 @@ class LineH{
     }
 }
 
+function LOC(a, b, c){
+    let cosAngle = 1./(Math.tanh(b) * Math.tanh(c))
+        -Math.cosh(a)/(Math.sinh(b) * Math.sinh(c))
+    if(a==0 || b==0 || c==0){
+        return NaN
+    }
+    if(cosAngle<=-1){
+        return Math.PI
+    }
+    if(cosAngle>=1){
+        return 0
+    }
+    return Math.acos(cosAngle)
+}
+
 class Vector{
     constructor(pos, dir){
         this.pos = pos
@@ -116,12 +145,42 @@ class Vector{
     }
     
     forward(factor){
+        let newDist = new PointH(this.pos.r, Math.PI).dist(new PointH(this.dir.r*factor, this.dir.t))
+        let angChange = LOC(this.dir.r*factor, this.pos.r, newDist) * Math.sign(this.dir.t*factor)
+        let newAng = LOC(this.pos.r, this.dir.r*factor, newDist) * Math.sign(this.dir.t*factor)
         
+        if(this.pos.r != 0){
+            this.pos.t += angChange
+        }else{
+            this.pos.t = this.dir.t
+        }
+        this.pos.r = newDist
+        if(newAng == newAng){
+            this.dir.t = newAng
+        }
+        this.pos.normalize()
+        this.dir.normalize()
     }
 
-    rotate(angle){
-        
+    turn(angle){
+        this.dir.t+=angle
+        this.dir.normalize()
     }
 }
-console.log(new PointH(1, Math.PI/2).dist(new PointH(1, 0)))
+let a = new PointH(0, 0)
+let b = new PointH(1, 0)
+let v = new Vector(a, b)
+console.log(v)
+// for(let i = 0;i<5;i++){
+//     v.forward(Math.asinh(Math.sqrt(0.5*(1+Math.sqrt(5.)))))
+//     v.turn(Math.PI/2)
+//     console.log(v)
+// }
 
+v.pos = new PointH(0,0)
+v.dir = new PointH(1,0)
+for(let i = 0;i<4;i++){
+    v.forward(2)
+    v.turn(Math.PI*2/5.)
+    console.log(v)
+}
